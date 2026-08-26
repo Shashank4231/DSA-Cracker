@@ -1,0 +1,85 @@
+// DFS Algorithm
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 50
+
+typedef struct Graph_t
+{
+    int V;
+    bool adj[MAX_VERTICES][MAX_VERTICES];
+} Graph;
+
+Graph *Graph_create(int V)
+{
+    Graph *g = malloc(sizeof(Graph));
+    g->V = V;
+    for (int i = 0; i < V; i++)
+        for (int j = 0; j < V; j++)
+            g->adj[i][j] = false;
+    return g;
+}
+
+void Graph_destroy(Graph *g)
+{
+    free(g);
+}
+
+void Graph_addEdge(Graph *g, int v, int w)
+{
+    g->adj[v][w] = true;
+}
+
+// Helper function for DFS
+void Graph_DFS_Util(Graph *g, int v, bool visited[])
+{
+    visited[v] = true;
+    printf("%c ", v + 'A');
+
+    for (int i = 0; i < g->V; i++)
+    {
+        if (g->adj[v][i] && !visited[i])
+        {
+            Graph_DFS_Util(g, i, visited);
+        }
+    }
+}
+
+// DFS traversal function
+void Graph_DFS(Graph *g, int start)
+{
+    bool visited[MAX_VERTICES] = {false};
+    Graph_DFS_Util(g, start, visited);
+}
+
+int main()
+{
+    Graph *g = Graph_create(9);
+
+    // Adding edges based on your version
+    Graph_addEdge(g, 0, 1); // A → B
+    Graph_addEdge(g, 0, 2); // A → C
+    Graph_addEdge(g, 0, 3); // A → D
+    Graph_addEdge(g, 1, 4); // B → E
+    Graph_addEdge(g, 2, 1); // C → B
+    Graph_addEdge(g, 2, 6); // C → G
+    Graph_addEdge(g, 3, 2); // D → C
+    Graph_addEdge(g, 3, 6); // D → G
+    Graph_addEdge(g, 4, 2); // E → C
+    Graph_addEdge(g, 4, 5); // E → F
+    Graph_addEdge(g, 5, 2); // F → C
+    Graph_addEdge(g, 5, 7); // F → H
+    Graph_addEdge(g, 6, 5); // G → F
+    Graph_addEdge(g, 6, 8); // G → I
+    Graph_addEdge(g, 7, 4); // H → E
+    Graph_addEdge(g, 7, 8); // H → I
+    Graph_addEdge(g, 8, 5); // I → F
+
+    printf("Following is Depth First Traversal (starting from vertex A):\n");
+    Graph_DFS(g, 0); // Start from A (index 0)
+
+    Graph_destroy(g);
+    return 0;
+}
